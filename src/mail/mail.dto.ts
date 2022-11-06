@@ -1,5 +1,6 @@
 export class MailConfirmRequestDTO {
   email: string;
+  username: string;
   code: string;
 }
 

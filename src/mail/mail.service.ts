@@ -15,12 +15,27 @@ export class MailService {
   ) {}
 
   public async sendConfirmationMail(payload: MailConfirmRequestDTO) {
-    await this.mailerService.sendMail({
-      to: payload.email,
-      subject: '',
-      template: '',
-      context: {},
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: payload.email,
+        subject: 'Registration',
+        template: 'registration.hbs',
+        context: { code: payload.code, username: payload.username },
+      });
+      this.loggerClient.emit('LOG_CREATE', {
+        name: 'Email Sent',
+        description: `Email registration validation as sent, username: ${payload.username}`,
+        service: 'MAILER',
+        type: 'INFO',
+      });
+    } catch (e) {
+      this.loggerClient.emit('LOG_CREATE', {
+        name: 'Email error',
+        description: e.message,
+        service: 'MAILER ',
+        type: 'ERROR',
+      });
+    }
   }
 
   public async sendResetPasswordMail(payload: MailResetRequestDTO) {

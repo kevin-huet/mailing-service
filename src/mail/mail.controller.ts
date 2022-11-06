@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import {
   MailConfirmRequestDTO,
   MailDeleteRequestDTO,
@@ -11,9 +11,9 @@ import {
 export class MailController {
   constructor(private mailService: MailService) {}
 
-  @MessagePattern('MAIL_SEND_CONFIRM_ACCOUNT')
+  @EventPattern('MAIL_SEND_CONFIRM_ACCOUNT')
   async accountConfirmation(payload: MailConfirmRequestDTO): Promise<any> {
-    return this.mailService.sendConfirmationMail(payload);
+    await this.mailService.sendConfirmationMail(payload);
   }
 
   @MessagePattern('MAIL_SEND_RESET_PASSWORD')
